@@ -9,7 +9,8 @@ class States(enum.Enum):
     DONE = 6
     ERROR = 7
 class Scanner():
-    charPointer = 0
+    # charPointer is defined as a class attribute for easy access from outside the class.
+    charPointer = 0 
     def getToken(self, tinyCode):
         state = States.START
         numToken = ""
@@ -82,15 +83,15 @@ class Scanner():
                     self.charPointer += 1
                     state = States.DONE
                     continue
-            elif state is States.DONE:
-                if numToken != "":
-                    return numToken
-                elif idToken != "":
-                    return idToken
-                elif symbolToken != "":
-                    return symbolToken
-                elif assignToken != "":
-                    return assignToken
-            elif state is States.ERROR:
-                self.charPointer = 0
-                return "Error!"
+        if state is States.DONE:
+            if numToken != "":
+                return numToken + ", Number"
+            elif idToken != "":
+                return idToken + ", Identifier"
+            elif symbolToken != "":
+                return symbolToken 
+            elif assignToken != "":
+                return assignToken + ", Assign"
+        elif state is States.ERROR:
+            self.charPointer = 0
+            return "Error!"

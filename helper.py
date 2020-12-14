@@ -3,7 +3,7 @@ Z = 90
 a = 97
 z = 122
 def isDigit(char_token):
-    if char_token >= 0 and char_token <= 9:
+    if char_token == "0" or char_token == "1" or char_token == "2" or char_token == "3" or char_token == "4" or char_token == "5" or char_token == "6" or char_token == "7" or char_token == "8" or char_token == "9":
         return True
     else:
         return False
