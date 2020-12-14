@@ -11,7 +11,9 @@ class States(enum.Enum):
 class Scanner():
     # charPointer is defined as a class attribute for easy access from outside the class.
     charPointer = 0 
-    def getToken(self, tinyCode):
+    def getToken(self, tinyCode, reset = False):
+        if reset:
+            self.charPointer = 0
         state = States.START
         numToken = ""
         idToken = ""
