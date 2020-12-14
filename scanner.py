@@ -17,7 +17,7 @@ class Scanner():
         idToken = ""
         assignToken = ""
         symbolToken = ""
-        while state is not States.DONE:
+        while state is not States.DONE and self.charPointer < len(tinyCode):
             if state is States.START:
                 if isSpace(tinyCode[self.charPointer]):
                     self.charPointer += 1
@@ -49,10 +49,11 @@ class Scanner():
                     state = States.ERROR
                     continue
             elif state is States.INCOMMENT:
-                self.charPointer += 1
                 if tinyCode[self.charPointer] != '}':
+                    self.charPointer += 1
                     continue
                 else:
+                    self.charPointer += 1
                     state = States.START
                     continue
             elif state is States.INNUM:
