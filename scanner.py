@@ -64,6 +64,8 @@ class Scanner():
                     self.charPointer += 1
                     continue
                 else:
+                    if tinyCode[self.charPointer] == ';':
+                        symbolToken = ';'
                     self.charPointer += 1
                     state = States.DONE
                     continue
@@ -73,6 +75,8 @@ class Scanner():
                     self.charPointer += 1
                     continue
                 else:
+                    if tinyCode[self.charPointer] == ';':
+                        symbolToken = ';'
                     self.charPointer += 1
                     state = States.DONE
                     continue
@@ -88,9 +92,13 @@ class Scanner():
                     continue
         if state is States.DONE:
             if numToken != "":
-                return numToken + ", Number"
+                if symbolToken == ";":
+                    return numToken + ", NUMBER\n" + ";, SEMICOLON"
+                return numToken + ", NUMBER"
             elif idToken != "":
-                return idToken + ", " + reservedWords.get(idToken, "Identifier")
+                if symbolToken == ";":
+                    return idToken + ", " + reservedWords.get(idToken, "IDENTIFIER") + "\n;, SEMICOLON"
+                return idToken + ", " + reservedWords.get(idToken, "IDENTIFIER")
             elif symbolToken != "":
                 return symbolToken + ", " + specialSymbols.get(symbolToken, "Not a valid token")
             elif assignToken != "":
