@@ -1,5 +1,5 @@
 import enum
-from helper import isDigit, isLetter, isSpace, isSpecialSymbol
+from helper import isDigit, isLetter, isSpace, isSpecialSymbol, reservedWords, specialSymbols
 class States(enum.Enum):
     START = 1
     INCOMMENT = 2
@@ -90,9 +90,9 @@ class Scanner():
             if numToken != "":
                 return numToken + ", Number"
             elif idToken != "":
-                return idToken + ", Identifier"
+                return idToken + ", " + reservedWords.get(idToken, "Identifier")
             elif symbolToken != "":
-                return symbolToken 
+                return symbolToken + ", " + specialSymbols.get(symbolToken, "Not a valid token")
             elif assignToken != "":
                 return assignToken + ", Assign"
         elif state is States.ERROR:

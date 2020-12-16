@@ -1,3 +1,9 @@
-x := 5;
-{Hello}
-Y := 4843;
+read x; {input}
+if 0 < x then {dont}
+fact := 1;
+repeat
+fact := fact * x;
+x := x - 1;
+until x = 0;
+write fact {output}
+end 

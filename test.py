@@ -7,7 +7,8 @@ for line in f:
 scanner = Scanner()
 for index in range(len(tinyCode)):
     token = scanner.getToken(tinyCode)
-    print(token)
+    if token is not None:
+        print(token)
 # token1 = scanner.getToken(tinyCode)
 # token2 = scanner.getToken(tinyCode)
 # token3 = scanner.getToken(tinyCode)
