@@ -5,6 +5,7 @@ z = 122
 reservedWords = {
     "if": "IF",
     "then": "THEN",
+    "else": "ELSE",
     "end": "END",
     "repeat": "Repeat",
     "until": "UNTIL",
