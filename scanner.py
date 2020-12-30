@@ -8,10 +8,24 @@ class States(enum.Enum):
     INASSIGN = 5
     DONE = 6
     ERROR = 7
+
+
+
 class Scanner():
     # charPointer is defined as a class attribute for easy access from outside the class.
-    charPointer = 0 
+    charPointer = 0
+    tkn = list()
+    tkpointer=0
+    def go(self, tinyCode, reset = False):
+        for index in range(len(tinyCode)):
+            self.tkn.append(self.getToken_d(tinyCode))
+
     def getToken(self, tinyCode, reset = False):
+        temp=self.tkn[self.tkpointer]
+        self.tkpointer+=1
+        return temp
+
+    def getToken_d(self, tinyCode, reset = False):
         if reset:
             self.charPointer = 0
         state = States.START
@@ -92,17 +106,30 @@ class Scanner():
                     continue
         if state is States.DONE:
             if numToken != "":
+                l=list()
+                l.append("NUMBER")
+                l.append(numToken)
                 # return numToken + ", NUMBER"
-                return "NUMBER"
+                return l
             elif idToken != "":
+                l=list()
+                l.append(reservedWords.get(idToken, "IDENTIFIER"))
+                l.append(idToken)
                 # return idToken + ", " + reservedWords.get(idToken, "IDENTIFIER")
-                return reservedWords.get(idToken, "IDENTIFIER")
+                return l
             elif symbolToken != "":
                 # return symbolToken + ", " + specialSymbols.get(symbolToken, "Not a valid token")
-                return symbolToken
+                l = list()
+                l.append(specialSymbols.get(symbolToken, "Not a valid token"))
+                l.append(symbolToken)
+                return l
             elif assignToken != "":
                 # return assignToken + ", ASSIGN"
-                return assignToken
+                l = list()
+                l.append("ASSIGN")
+                l.append(assignToken)
+                return l
+
         elif state is States.ERROR:
             self.charPointer = 0
             return "Error!"

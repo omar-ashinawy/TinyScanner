@@ -5,10 +5,11 @@ from PyQt5.QtCore import QTimer, QTime, Qt, QDate, QDateTime
 import sys,os
 import time
 from PyQt5.QtCore import *
-from PyQt5.QtGui import QColor, QKeySequence
+from PyQt5.QtGui import QColor, QKeySequence,QPixmap
 
 from scanner import Scanner
-
+from Parser import *
+from PIL import Image 
 
 def resource_path(relative_path):
 	if hasattr(sys, '_MEIPASS'):
@@ -25,14 +26,13 @@ class MyWindow(QMainWindow):
 		self.setWindowTitle("Compiler Project")
 		self.init_ui()
 		self.scanner = Scanner()
+		self.parser = Parser()
 
 	def init_ui(self):
 		print("Initialization")
 		self.Output_Area.setReadOnly(True)
 		self.console.setReadOnly(True)
 
-
-		self.Code_Area.textChanged.connect(self.Color_Code)
 		self.Open_File.triggered.connect(self.openFileNameDialog)
 		self.Save_File.triggered.connect(self.saveFileDialog)
 		self.Open_shortcut = QShortcut(QKeySequence("Ctrl+O"),self)
@@ -44,17 +44,6 @@ class MyWindow(QMainWindow):
 		self.Run_shortcut = QShortcut(QKeySequence("Ctrl+R"), self)
 		self.Run_shortcut.activated.connect(self.Run_Scanner)
 
-	def Color_Code(self):
-		text=self.Code_Area.toPlainText()
-		if(text[-5:]==" int "):
-			Newint =" <span style=\" font-size:15pt;font:Consolas;color:RED;Bold=true\">int</span>"
-			cursor = self.Code_Area.textCursor()
-			self.Code_Area.setHtml(text[:-4])
-			self.Code_Area.setTextCursor(cursor)
-			self.Code_Area.insertHtml(Newint)
-			self.Code_Area.setTextColor(QColor(255,255,255))
-
-		print(text)
   
 	def openFileNameDialog(self):
 		options = QFileDialog.Options()
@@ -75,12 +64,25 @@ class MyWindow(QMainWindow):
 
 	def Run_Scanner(self):
 		text = self.Code_Area.toPlainText()
+		self.Run_Parser()
 		self.scanner.charPointer=0
 		self.Output_Area.clear()
 		for index in range(len(text)):
-			token = self.scanner.getToken(text)
+			token = self.scanner.getToken_d(text)
 			if(token != None):
-				self.Output_Area.append(token)
+				self.Output_Area.append(token[0]+" , "+token[1])
+
+	def Run_Parser(self):
+		text = self.Code_Area.toPlainText()
+		self.parser.scanner.charPointer=0
+		self.parser.scanner.go(text)
+		self.parser.addCode(text)
+		self.parser.stmt_seq()
+		self.parser.Graph.draw('SyntaxTree.png',prog='dot')
+		popup =Image.open('SyntaxTree.png')
+		popup.show()
+		 
+		
 def window():
 	app = QApplication(sys.argv)
 	wind = MyWindow()
